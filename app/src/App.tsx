@@ -1,11 +1,17 @@
-import { readString } from 'react-papaparse'
 import './App.css'
+import { readString } from 'react-papaparse'
 import Dropzone from 'react-dropzone'
 import { useEffect, useState } from 'react'
 import { extractQuestions } from './AzureOpenAI'
+import { CSVUploadDropZone } from './components/CSVUploadDropZone'
 
 
 function App() {
+/* 
+  The following are raw entries in a user's spreadsheet from an unstructured column.
+  The goal is to generate a list of questions to ask a subject matter expert (SME)
+  that will give enough context to create a schema to break down the column into structured data.
+*/
 
   const [unstructuredFieldName, setUnstructuredFieldName] = useState('')
   const [unstructuredFieldValues, setUnstructuredFieldValues] = useState([])
@@ -20,50 +26,14 @@ function App() {
     }
   }, [unstructuredFieldName])
 
-  useEffect(() => {
-    console.dir(asCSVData)
-  }, [asCSVData])
-
-  useEffect(() => {
-    console.log(listOfDataFromUnstructuredField)
-  }, [listOfDataFromUnstructuredField])
-
   return (
     <>
       <div>
         <h1>Welcome to the Dispatch Decoder</h1>
-        <Dropzone onDrop={acceptedFiles => {
-           acceptedFiles.forEach((file) => {
-            const reader = new FileReader()
-      
-            reader.onabort = () => console.log('file reading was aborted')
-            reader.onerror = () => console.log('file reading has failed')
-            reader.onload = () => {
-            // Do whatever you want with the file contents
-              const textResult : any = reader.result
-              const asCSVData = readString(textResult, {header: true, complete: (results) => {
-                console.log(results)
-                setAsCSVData(results as any)
-              }})
-              console.dir(asCSVData)
-              // put all headers into the dropdown
-              const headers = (asCSVData as any).meta.fields
-              setUnstructuredFieldValues(headers)
-              console.log(headers)
-            }
-            reader.readAsText(file)
-          })
-        }}>
-          {({getRootProps, getInputProps}) => (
-            <div id="dropzone">
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                <p>Drag the CSV with an unstructured column here</p>
-              </div>
-            </div>
-          )}
-        </Dropzone>
       </div>
+      <h2>1. Upload a CSV file with an unstructured column</h2>
+      <CSVUploadDropZone setAsCSVData={setAsCSVData} setUnstructuredFieldValues={setUnstructuredFieldValues} />
+      <h2>2. Select the unstructured field name</h2>
       <div id="input_unstructured_field_name">
         <label htmlFor="input_unstructured_field_name">Unstructured Field Name</label>
         <select value={unstructuredFieldName} id="input_unstructured_field_name"
@@ -79,6 +49,7 @@ function App() {
           Extract Questions
         </button>
       </div>      
+
 
     </>
   )
