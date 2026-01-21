@@ -1,6 +1,6 @@
 import { AzureOpenAI } from 'openai';
 
-export async function extractQuestions(data: string[]): Promise<void> {
+export async function extractQuestions(data: string[]): Promise<string | null> {
   
   const prompt = `The following are raw entries in a user's spreadsheet from an unstructured column.
   The goal is to generate a list of questions to ask a subject matter expert (SME)
@@ -30,9 +30,9 @@ export async function extractQuestions(data: string[]): Promise<void> {
         }
       ]
     });
-
-    console.log(response.choices[0].message.content);
+    return response.choices[0].message.content
   } catch (error) {
     console.error('Error calling Azure OpenAI:', error);
+    return null
   }
 }

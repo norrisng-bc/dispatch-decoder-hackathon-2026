@@ -17,6 +17,13 @@ function App() {
   const [unstructuredFieldValues, setUnstructuredFieldValues] = useState([])
   const[listOfDataFromUnstructuredField, setListOfDataFromUnstructuredField] = useState([])
   const[asCSVData, setAsCSVData] = useState<any>([])
+  const [extractedQuestions, setExtractedQuestions] = useState<string | null>(null)
+
+  const handleExtractQuestions = async () => {
+    const result = await extractQuestions(listOfDataFromUnstructuredField)
+    console.log(result)
+    setExtractedQuestions(result)
+  }  
 
   useEffect(() => {
     console.log(unstructuredFieldName)
@@ -45,12 +52,17 @@ function App() {
         </select>
       </div>
       <div>
-        <button onClick={() => extractQuestions(listOfDataFromUnstructuredField).then(() => {window.alert('Done! Please check the console.')})}>
+        <button onClick={handleExtractQuestions}>
           Extract Questions
         </button>
       </div>      
 
-
+      {extractedQuestions && (
+        <div>
+          <h2>Extracted Questions:</h2>
+          <pre>{extractedQuestions}</pre>
+        </div>
+      )}   
     </>
   )
 }
