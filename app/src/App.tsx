@@ -29,7 +29,12 @@ function App() {
     console.log(unstructuredFieldName)
     if (asCSVData.data) {
       const listOfDataFromUnstructuredField = asCSVData.data.map((row: any) => row[unstructuredFieldName])
-      setListOfDataFromUnstructuredField(listOfDataFromUnstructuredField)
+      if(listOfDataFromUnstructuredField.length > 5000) {
+        window.alert('Too many rows for this part of it, going to truncate to 5000 rows')
+        setListOfDataFromUnstructuredField(listOfDataFromUnstructuredField.slice(0, 5000))
+      } else {
+        setListOfDataFromUnstructuredField(listOfDataFromUnstructuredField)
+      }
     }
   }, [unstructuredFieldName])
 
