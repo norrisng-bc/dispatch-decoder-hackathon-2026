@@ -2,6 +2,7 @@ import { readString } from 'react-papaparse'
 import './App.css'
 import Dropzone from 'react-dropzone'
 import { useEffect, useState } from 'react'
+import { extractQuestions } from './AzureOpenAI'
 
 
 function App() {
@@ -73,6 +74,11 @@ function App() {
           ))}
         </select>
       </div>
+      <div>
+        <button onClick={() => extractQuestions(listOfDataFromUnstructuredField).then(() => {window.alert('Done! Please check the console.')})}>
+          Extract Questions
+        </button>
+      </div>      
 
     </>
   )

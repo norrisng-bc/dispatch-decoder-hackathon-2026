@@ -7,13 +7,14 @@ export async function extractQuestions(data: string[]): Promise<void> {
   that will give enough context to create a schema to break down the column into structured data.
   Order the questions in descending order with the leading ones being about the elements in question that come up most often.
 
-  ${data.join('\n')}`
+  \n${data.join('\n')}`
   
   const client = new AzureOpenAI({
-    apiKey: import.meta.env.AZURE_OPENAI_API_KEY,
-    endpoint: import.meta.env.AZURE_OPENAI_ENDPOINT,    
+    apiKey: import.meta.env.VITE_AZURE_OPENAI_API_KEY,
+    endpoint: import.meta.env.VITE_AZURE_OPENAI_ENDPOINT,    
     apiVersion: '2023-07-01-preview',
-    deployment: 'gpt-4o' // e.g., 'gpt-4', 'gpt-35-turbo'
+    deployment: 'gpt-4o', // e.g., 'gpt-4', 'gpt-35-turbo'    
+    dangerouslyAllowBrowser: true     // FIXME: do not run outside a local environment!!!
   });
 
   console.log(prompt);
