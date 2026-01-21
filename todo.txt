@@ -1,0 +1,31 @@
+
+input > spreadsheet with column with unstructured data
+output > list of questions about the unstructured data, with the goal that answers to them will help define a structure for a new spreadsheet
+
+input > new spreadsheet with unstructured field 
+output > same thing but it takes the questions askes previously into account.
+
+
+Dispatch Decoder Wizard - Step 1
+UI to upload spreadsheet
+- [ ] new vite ts react template
+- [ ] somewhere to upload spreadsheet
+    - [ ] Create a UI component (or find one) to upload a file (csv)
+    - [ ] Create an input to ask the user for what column is unstructured
+    - [ ] Create a submit buton that:
+        - [ ] Calls LLM provides data in all rows of unstructured column 
+        - [ ] Asks it to:
+            - [ ] Create a list of questions for the user on what things mean in that column so it can later suggest a new schema
+    
+
+    
+- [ ] indicate which field is unstructured
+
+Dispacth Decoder Wizard - Step 2
+- [ ] somewhere to display questions from spreadsheet
+- [ ] input answers from dispatchers
+- [ ] use that to create a new schema / csv structure 
+- [ ] reprocess the files and output with the new columns
+
+
+
