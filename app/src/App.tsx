@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Dropzone from 'react-dropzone'
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Welcome to the Dispatch Decoder</h1>
+        <Dropzone onDrop={acceptedFiles => {
+           acceptedFiles.forEach((file) => {
+            const reader = new FileReader()
+      
+            reader.onabort = () => console.log('file reading was aborted')
+            reader.onerror = () => console.log('file reading has failed')
+            reader.onload = () => {
+            // Do whatever you want with the file contents
+              const binaryStr = reader.result
+              console.log(binaryStr)
+            }
+            reader.readAsArrayBuffer(file)
+          })
+        }}>
+          {({getRootProps, getInputProps}) => (
+            <div id="dropzone">
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <p>Drag the CSV with an unstructured column here</p>
+              </div>
+            </div>
+          )}
+        </Dropzone>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
