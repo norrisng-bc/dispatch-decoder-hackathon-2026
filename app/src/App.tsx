@@ -156,11 +156,21 @@ useEffect(() => {
       </div>
 
       <h2 id="step6_title">6. LLM generates schema suggestions based on the SME's responses</h2>
-      <div id="step6_content" className="step-content_not_started"> </div>
+      <div id="step6_content" className="step-content_not_started">
         <button onClick={handleRefineSchema}>Generate schema</button>
+      </div>
 
       <h2 id="step7_title">7. Reprocess original file with the new schema</h2>
-      <div id="step7_content" className="step-content_not_started"> </div>  
+      <div id="step7_content" className="step-content_not_started"> 
+        {
+          extractedSchema && (
+            <div>
+              <h2>Schema:</h2>
+              <p>{extractedSchema}</p>
+            </div>
+          )
+        }
+      </div>  
     </>
   )
 }

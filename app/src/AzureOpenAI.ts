@@ -53,7 +53,7 @@ export async function refineSchema(data: string[], responses: string[][]): Promi
   ${responses}
   \`\`\`
 
-  Create a schema to break down the column into structured data. 
+  Create a schema to break down the column into structured data. Ignore any unanswered questions.
   Format said schema as a properly-quoted and delimited CSV header string. 
   Do not include anything other than this in your response.`
 
@@ -78,7 +78,11 @@ export async function refineSchema(data: string[], responses: string[][]): Promi
         }
       ]
     });
-    return response.choices[0].message.content    
+    const rawResponse = response.choices[0].message.content
+    let data = rawResponse?.replace(/```csv\n/g, '')
+    //remove ``` from end of string
+    data = data?.replace(/```/g, '')
+    return data ?? ''
   } catch (error) {
     console.error('Error calling Azure OpenAI:', error);
     return null
