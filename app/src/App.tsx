@@ -3,7 +3,7 @@ import { readString } from 'react-papaparse'
 import Dropzone from 'react-dropzone'
 import ReactMarkdown from 'react-markdown'
 import { useEffect, useState } from 'react'
-import { extractQuestions } from './AzureOpenAI'
+import { extractQuestions, refineSchema } from './AzureOpenAI'
 import { CSVUploadDropZone } from './components/CSVUploadDropZone'
 import { CSVDownloadHelper } from './components/CSVDownloadHelper'
 
@@ -41,9 +41,14 @@ function App() {
   // List of data from the unstructured field
   const[listOfDataFromUnstructuredField, setListOfDataFromUnstructuredField] = useState([])
 
-
   // The extracted questions from LLM in Step 3
   const [extractedQuestions, setExtractedQuestions] = useState<string | null>(null)
+
+  // SME responses from the file uploaded in Step 5
+  const [smeResponses, setSmeResponses] = useState<any>([])
+
+  // Extracted schema from LLM in Step 6
+  const [extractedSchema, setExtractedSchema] = useState<any>([])
 
   // Handle the Extract Questions button click in Step 3
   const handleExtractQuestions = async () => {
@@ -54,13 +59,20 @@ function App() {
     updateStepAsDone(3)
   }  
 
+  const handleRefineSchema = async () => {
+    setIsLoading(true)
+    const result = await refineSchema(listOfDataFromUnstructuredField, smeResponses)
+    console.log(result)
+    setExtractedSchema(result)
+    updateStepAsDone(6)
+  }
+
   // Step 1: On change of the CSV file, update the step as done
   useEffect(()=>  {
     if(asCSVData.data) {
       updateStepAsDone(1)
     }
   },[asCSVData])
-
 
   var changeCount = 0;
   // Step 2: On change of the unstructured field name, update the list of data from the unstructured field
@@ -80,6 +92,18 @@ function App() {
     }
   }, [unstructuredFieldName])
 
+  // Step 5: On SME response upload, update the step as done
+useEffect(() => {
+  if(smeResponses.data) {
+    const headers = smeResponses.meta?.fields || [];
+    if(headers.includes('Question') && headers.includes('Category') && headers.includes('Answers')) {
+      console.log(smeResponses.data)
+      updateStepAsDone(5)
+    } else {
+      window.alert('CSV must have "Question", "Category", and "Answers" columns')
+    }
+  }
+}, [smeResponses])
 
   return (
     <>
@@ -127,10 +151,13 @@ function App() {
       <div id="step4_content" className="step-content_not_started"> <CSVDownloadHelper additionalOnClick={() => { updateStepAsDone(4) }} data={extractedQuestions} /></div>
 
       <h2 id="step5_title">5. Upload the SME's responses to the questions in a CSV file</h2>
-      <div id="step5_content" className="step-content_not_started"> </div>
+      <div id="step5_content" className="step-content_not_started"> 
+        <CSVUploadDropZone setAsCSVData={setSmeResponses} setUnstructuredFieldValues={() => {}} />
+      </div>
 
       <h2 id="step6_title">6. LLM generates schema suggestions based on the SME's responses</h2>
       <div id="step6_content" className="step-content_not_started"> </div>
+        <button onClick={handleRefineSchema}>Generate schema</button>
 
       <h2 id="step7_title">7. Reprocess original file with the new schema</h2>
       <div id="step7_content" className="step-content_not_started"> </div>  
