@@ -11,6 +11,18 @@
   text-align: center;
 }
 
+h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+.h2-done {
+  color: green;
+}
 .llm-output {
   text-align: left;
+}
+
+.div-done {
+  display: none;
 }
