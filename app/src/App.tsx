@@ -1,6 +1,7 @@
 import './App.css'
 import { readString } from 'react-papaparse'
 import Dropzone from 'react-dropzone'
+import ReactMarkdown from 'react-markdown'
 import { useEffect, useState } from 'react'
 import { extractQuestions } from './AzureOpenAI'
 import { CSVUploadDropZone } from './components/CSVUploadDropZone'
@@ -63,9 +64,9 @@ function App() {
       </div>      
 
       {extractedQuestions && (
-        <div>
+        <div className="llm-output">
           <h2>Extracted Questions:</h2>
-          <pre>{extractedQuestions}</pre>
+          <ReactMarkdown>{extractedQuestions}</ReactMarkdown>
         </div>
       )}   
     </>
