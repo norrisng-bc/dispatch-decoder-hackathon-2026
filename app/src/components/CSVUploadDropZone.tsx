@@ -28,7 +28,7 @@ return        <Dropzone onDrop={acceptedFiles => {
             <div id="dropzone">
               <div {...getRootProps()}>
                 <input {...getInputProps()} />
-                <p>Drag the CSV with an unstructured column here</p>
+                <p>{props.message}</p>
               </div>
             </div>
           )}

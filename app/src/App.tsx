@@ -3,7 +3,7 @@ import { readString } from 'react-papaparse'
 import Dropzone from 'react-dropzone'
 import ReactMarkdown from 'react-markdown'
 import { useEffect, useState } from 'react'
-import { extractQuestions, refineSchema } from './AzureOpenAI'
+import { extractQuestions, refineSchema, reprocessFile } from './AzureOpenAI'
 import { CSVUploadDropZone } from './components/CSVUploadDropZone'
 import { CSVDownloadHelper } from './components/CSVDownloadHelper'
 
@@ -67,6 +67,23 @@ function App() {
     updateStepAsDone(6)
   }
 
+  const handleReprocessFile = async () => {
+    setIsLoading(true)
+    const result = await reprocessFile(listOfDataFromUnstructuredField, extractedSchema, smeResponses, unstructuredFieldName)
+    console.dir(result)
+    if(result) {
+      //download:
+      const blob = new Blob([result], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'result_reprocessed_data.csv'
+      a.click()
+      updateStepAsDone(7)
+      
+    }
+  }
+
   // Step 1: On change of the CSV file, update the step as done
   useEffect(()=>  {
     if(asCSVData.data) {
@@ -114,7 +131,7 @@ useEffect(() => {
 
       <h2 id="step1_title">1. Upload a CSV file with an unstructured column</h2>
       <div id="step1_content">
-        <CSVUploadDropZone setAsCSVData={setAsCSVData} setUnstructuredFieldValues={setUnstructuredFieldValues} />
+        <CSVUploadDropZone setAsCSVData={setAsCSVData} setUnstructuredFieldValues={setUnstructuredFieldValues} message="Drag the CSV with an unstructured column here" />
       </div>
 
       <h2 id="step2_title">2. Select the unstructured field name</h2>
@@ -152,7 +169,7 @@ useEffect(() => {
 
       <h2 id="step5_title">5. Upload the SME's responses to the questions in a CSV file</h2>
       <div id="step5_content" className="step-content_not_started"> 
-        <CSVUploadDropZone setAsCSVData={setSmeResponses} setUnstructuredFieldValues={() => {}} />
+        <CSVUploadDropZone setAsCSVData={setSmeResponses} setUnstructuredFieldValues={() => {}} message="Drag the CSV with the SME's responses here" />
       </div>
 
       <h2 id="step6_title">6. LLM generates schema suggestions based on the SME's responses</h2>
@@ -162,6 +179,7 @@ useEffect(() => {
 
       <h2 id="step7_title">7. Reprocess original file with the new schema</h2>
       <div id="step7_content" className="step-content_not_started"> 
+        <button onClick={handleReprocessFile}>Reprocess file</button>
         {
           extractedSchema && (
             <div>
