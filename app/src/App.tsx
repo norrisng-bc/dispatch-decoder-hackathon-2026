@@ -84,7 +84,8 @@ function App() {
   return (
     <>
       <div>
-        <h1>Welcome to the Dispatch Decoder</h1>
+        <h1>Welcome to Clippy's Clutch Converter</h1>
+        <img src="/10 - dds hackathon clippy.png" alt="Dispatch Decoder" width="200" height="200" />
       </div>
 
       <h2 id="step1_title">1. Upload a CSV file with an unstructured column</h2>
