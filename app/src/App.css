@@ -23,6 +23,14 @@ h2 {
   text-align: left;
 }
 
+.step-content_not_started {
+  display: none;
+}
+
+.step-content_started {
+  display: block;
+}
+
 .div-done {
   display: none;
 }

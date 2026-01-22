@@ -8,30 +8,29 @@ import { CSVUploadDropZone } from './components/CSVUploadDropZone'
 
 
 function App() {
-/* 
-  The following are raw entries in a user's spreadsheet from an unstructured column.
-  The goal is to generate a list of questions to ask a subject matter expert (SME)
-  that will give enough context to create a schema to break down the column into structured data.
-*/
+
+  // Make the step title green and hide the content
   const updateStepAsDone = (step: number) => {
     document.getElementById(`step${step}_title`)?.classList.add('h2-done')
     document.getElementById(`step${step}_content`)?.classList.add('div-done')
+    document.getElementById(`step${step + 1}_content`)?.classList.remove('step-content_not_started')
   }
 
-  // Name of the unstructured field in the CSV
+  // The Initial Upload CSV data in Step 1
+  const[asCSVData, setAsCSVData] = useState<any>([])
+
+  // Name of the unstructured field in the CSV in Step 2
   const [unstructuredFieldName, setUnstructuredFieldName] = useState('')
   // List of column names for the unstructured field selecor dropdown
   const [unstructuredFieldValues, setUnstructuredFieldValues] = useState([])
   // List of data from the unstructured field
   const[listOfDataFromUnstructuredField, setListOfDataFromUnstructuredField] = useState([])
 
-  // The Initial Upload CSV data
-  const[asCSVData, setAsCSVData] = useState<any>([])
 
-  // The extracted questions from LLM
+  // The extracted questions from LLM in Step 3
   const [extractedQuestions, setExtractedQuestions] = useState<string | null>(null)
 
-  // Handle the Extract Questions button click
+  // Handle the Extract Questions button click in Step 3
   const handleExtractQuestions = async () => {
     const result = await extractQuestions(listOfDataFromUnstructuredField)
     console.log(result)
@@ -39,6 +38,7 @@ function App() {
     updateStepAsDone(3)
   }  
 
+  // Step 1: On change of the CSV file, update the step as done
   useEffect(()=>  {
     if(asCSVData.data) {
       updateStepAsDone(1)
@@ -77,7 +77,7 @@ function App() {
       </div>
 
       <h2 id="step2_title">2. Select the unstructured field name</h2>
-      <div id="step2_content">
+      <div id="step2_content" className="step-content_not_started">
         <div id="input_unstructured_field_name">
           <label htmlFor="input_unstructured_field_name">Unstructured Field Name</label>
           <select value={unstructuredFieldName} id="input_unstructured_field_name"
@@ -92,7 +92,7 @@ function App() {
       </div>
 
       <h2 id="step3_title">3. LLM: Extract questions for SME clarification</h2>
-      <div id="step3_content">
+      <div id="step3_content" className="step-content_not_started">
           <button onClick={handleExtractQuestions}>
             Extract Questions
           </button>
@@ -107,16 +107,16 @@ function App() {
 
 
       <h2 id="step4_title">4. Review the extracted questions and ask the SME for clarification</h2>
-      <div id="step4_content"> </div>
+      <div id="step4_content" className="step-content_not_started"> </div>
 
       <h2 id="step5_title">5. Upload the SME's responses to the questions in a CSV file</h2>
-      <div id="step5_content"> </div>
+      <div id="step5_content" className="step-content_not_started"> </div>
 
       <h2 id="step6_title">6. LLM generates schema suggestions based on the SME's responses</h2>
-      <div id="step6_content"> </div>
+      <div id="step6_content" className="step-content_not_started"> </div>
 
       <h2 id="step7_title">7. Reprocess original file with the new schema</h2>
-      <div id="step7_content"> </div>  
+      <div id="step7_content" className="step-content_not_started"> </div>  
     </>
   )
 }
