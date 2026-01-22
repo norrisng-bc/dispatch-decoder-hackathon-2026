@@ -9,17 +9,31 @@ import { CSVUploadDropZone } from './components/CSVUploadDropZone'
 
 function App() {
 
-  // Make the step title green and hide the content
+  // For cursor loading spinner
+  const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    if(isLoading) {
+      //load custom cursor
+      document.body.classList.add('waiting');
+      document.body.classList.remove('pointer');
+    } else {
+      document.body.classList.add('pointer');
+      document.body.classList.remove('waiting');
+    }
+  } )
+
+  // Poor man's wizard: Make the step title green and hide the content, and show the next step content
   const updateStepAsDone = (step: number) => {
     document.getElementById(`step${step}_title`)?.classList.add('h2-done')
     document.getElementById(`step${step}_content`)?.classList.add('div-done')
     document.getElementById(`step${step + 1}_content`)?.classList.remove('step-content_not_started')
+    setIsLoading(false)
   }
 
   // The Initial Upload CSV data in Step 1
   const[asCSVData, setAsCSVData] = useState<any>([])
 
-  // Name of the unstructured field in the CSV in Step 2
+  // Name of the chosen unstructured field in the CSV in Step 2
   const [unstructuredFieldName, setUnstructuredFieldName] = useState('')
   // List of column names for the unstructured field selecor dropdown
   const [unstructuredFieldValues, setUnstructuredFieldValues] = useState([])
@@ -32,6 +46,7 @@ function App() {
 
   // Handle the Extract Questions button click in Step 3
   const handleExtractQuestions = async () => {
+    setIsLoading(true)
     const result = await extractQuestions(listOfDataFromUnstructuredField)
     console.log(result)
     setExtractedQuestions(result)
