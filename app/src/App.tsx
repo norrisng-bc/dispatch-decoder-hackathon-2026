@@ -5,11 +5,12 @@ import ReactMarkdown from 'react-markdown'
 import { useEffect, useState } from 'react'
 import { extractQuestions } from './AzureOpenAI'
 import { CSVUploadDropZone } from './components/CSVUploadDropZone'
+import { CSVDownloadHelper } from './components/CSVDownloadHelper'
 
 
 function App() {
 
-  // For cursor loading spinner
+  // For cursor loading spinner / 90s vibe
   const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     if(isLoading) {
@@ -122,7 +123,7 @@ function App() {
 
 
       <h2 id="step4_title">4. Review the extracted questions and ask the SME for clarification</h2>
-      <div id="step4_content" className="step-content_not_started"> </div>
+      <div id="step4_content" className="step-content_not_started"> <CSVDownloadHelper additionalOnClick={() => { updateStepAsDone(4) }} data={extractedQuestions} /></div>
 
       <h2 id="step5_title">5. Upload the SME's responses to the questions in a CSV file</h2>
       <div id="step5_content" className="step-content_not_started"> </div>

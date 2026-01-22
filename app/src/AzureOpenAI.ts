@@ -6,7 +6,7 @@ export async function extractQuestions(data: string[]): Promise<string | null> {
   The goal is to generate a list of questions to ask a subject matter expert (SME)
   that will give enough context to create a schema to break down the column into structured data.
   Order the questions in descending order with the leading ones being about the elements in question that come up most often
-  Return them in a csv format with question in the first column, and the category in the second column."
+  Return ONLY the properly quoted and escaped csv, with question in the first column, and the category in the second column.  Include a blank column titled Answers"
 
   \n${data.join('\n')}`
   
